@@ -1,0 +1,88 @@
+<html>
+    <head>
+        {% load static %}
+        {% get_static_prefix as STATIC_URL %}
+        <link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'>
+</script>
+<title>Google Calendar Edit Page:</title>
+
+</head>
+<body>
+
+<script type="text/javascript">
+$(document).ready( function(){
+
+  //this block hides the forms initially
+  $("#create_edit_calendar").addClass("inner").hide();
+  $("#instructions_div").addClass("inner").hide();
+  $("#secondary").addClass("inner").hide();
+  //for each button, the other forms will slide up
+  //and the relevant one will be displayed
+  $("#new_group_view_form").click( function(){
+    $("#instructions_div").slideUp();
+    $("#create_edit_calendar").slideDown();
+  });
+  $("#instructions_view").click( function(){
+    $("#create_edit_calendar").slideUp();
+    $("#instructions_div").slideDown();
+  });
+});
+</script>
+
+<div id="outer">
+
+<div id="header">
+<h1>Google Calendars</h1>
+<ul id="navbar">
+<li id="new_group_view_form"><div id="navbar_div">
+Calendar Form
+</div></li>
+<li id="instructions_view"><div id="navbar_div">
+Instructions
+</div></li>
+<a href="/accounts/logout" >
+<li id="logout_button"><div id="navbar_div">
+Logout
+</div></li>
+</a>
+</ul>
+</div>
+
+<div id="create_edit_calendar">
+<div id="form_div">
+<form action='/cal/' method='post'>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+<label for="calendar_name">Name of Calendar</label>
+<br/>
+{{ form.calendar_name }}
+<br/>
+<label for="requestor">Requestor</label>
+<br/>
+{{ form.requestor_1 }}
+<br/>
+<label for="secondary">Secondary Requestor</label>
+<br/>
+{{ form.requestor_2 }}
+<br/>
+<input name="submit" type="submit"/>
+</form>
+</div>
+</div>
+
+<div id="instructions_div">
+<div id='form_div'>
+<p>
+To use this form, enter the name of a calendar. <br/>
+If it is not an existing calendar, it will be created. <br/>
+If it is an existing calendar, this will query it. <br/>
+After being created or queried, the requestors will <br/>
+be added as owners of the calendar.
+</p>
+</div>
+</div>
+
+</div>
+</body>
+</html>

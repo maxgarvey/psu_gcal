@@ -1,0 +1,7 @@
+from django import forms
+
+#the calendar form
+class NewCalendar( forms.Form ):
+  name_field = forms.CharField(max_length=100) #cal name
+  requestor_1 = forms.CharField(max_length=100) #requestor 1
+  requestor_2 = forms.CharField(max_length=100) #requestor 2

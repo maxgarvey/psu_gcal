@@ -1,0 +1,37 @@
+<html>
+    <head>
+        {% load static %}
+        {% get_static_prefix as STATIC_URL %}
+        <link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'>
+</script>
+<title>Google Calendar Edit Page:</title>
+
+</head>
+<body>
+
+<div id="outer">
+
+<div id="header">
+<h1>Google Calendars</h1>
+</div>
+<div class='inner'>
+<div id="response_div">
+<p>
+Success<br/>
+Calendar: {{ success_message }}<br/>
+{% if requestor_1 %}
+{{ requestor_1 }} is owner of {{ calendar_name }}<br/>
+{% endif %}
+{% if requestor_2 %}
+{{ requestor_2 }} is owner of {{ calendar_name }}<br/>
+{% endif %}
+</p>
+<a href='/cal/'>
+Back
+</a>
+</div>
+</div>
+</div>
+</body>
+</html>
