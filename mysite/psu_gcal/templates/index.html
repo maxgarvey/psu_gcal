@@ -16,18 +16,46 @@ $(document).ready( function(){
   //this block hides the forms initially
   $("#create_edit_calendar").addClass("inner").hide();
   $("#instructions_div").addClass("inner").hide();
-  $("#secondary").addClass("inner").hide();
+  $("#success").addClass("inner").hide();
+  $("#waiting").addClass("inner").hide();
+
   //for each button, the other forms will slide up
   //and the relevant one will be displayed
-  $("#new_group_view_form").click( function(){
+  $("#create_edit_calendar_view").click( function(){
     $("#instructions_div").slideUp();
+    $("#success").hide();
+    $("#waiting").hide();
     $("#create_edit_calendar").slideDown();
   });
   $("#instructions_view").click( function(){
     $("#create_edit_calendar").slideUp();
+    $("#success").hide();
+    $("#waiting").hide()
     $("#instructions_div").slideDown();
   });
-});
+
+  $("#submit").click( function() {
+    $.ajax({
+      url:"/cal/",
+      type:"POST",
+      data:"csrfmiddlewaretoken="+$("input[type=hidden][name=csrfmiddlewaretoken]").attr("value")+
+        "&calendar_name="+$("input[name=calendar_name]").val()+
+        "&requestor_1="+$("input[name=requestor_1]").val()+
+        "&requestor_2="+$("input[name=requestor_2]").val(),
+      success:function(a){
+        $('#waiting').slideUp();
+        $('#success').html('<div id="form_div">'+a+' </div>');
+        $('#success').slideDown();
+      }
+      });
+    $("#instructions_div").slideUp();
+    $("#create_edit_calendar").slideUp();
+    $("#waiting").slideDown();
+    });
+
+  //$("#success").hide();
+  }
+);
 </script>
 
 <div id="outer">
@@ -35,7 +63,8 @@ $(document).ready( function(){
 <div id="header">
 <h1>Google Calendars</h1>
 <ul id="navbar">
-<li id="new_group_view_form"><div id="navbar_div">
+<div id="navbar_posish">
+<li id="create_edit_calendar_view"><div id="navbar_div_left">
 Calendar Form
 </div></li>
 <li id="instructions_view"><div id="navbar_div">
@@ -66,7 +95,10 @@ Logout
 <br/>
 {{ form.requestor_2 }}
 <br/>
-<input name="submit" type="submit"/>
+<!-- <input name="submit" type="submit"/> -->
+<div id="submit">
+Submit
+</div>
 </form>
 </div>
 </div>
@@ -80,6 +112,18 @@ If it is an existing calendar, this will query it. <br/>
 After being created or queried, the requestors will <br/>
 be added as owners of the calendar.
 </p>
+</div>
+</div>
+
+<div id="success">
+<div id="form_div">
+
+</div>
+</div>
+
+<div id="waiting">
+<div id="form_div">
+Waiting for response...
 </div>
 </div>
 

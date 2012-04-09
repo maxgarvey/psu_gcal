@@ -1,6 +1,8 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
+#added next line for ajax-ing
+from django.core.context_processors import csrf
 from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
 from cal_forms import NewCalendar
@@ -79,13 +81,16 @@ def index(request):
 #@login_required
 def success( success_message, requestor_1, requestor_2, calendar_name ):
   '''render the template with all of the correct fields'''
-  return render_to_response('success.html', { 'success_message': success_message, \
-    'requestor_1': requestor_1, 'requestor_2': requestor_2, 'calendar_name':calendar_name } )
+  #return render_to_response('success.html', { 'success_message': success_message, \
+  #  'requestor_1': requestor_1, 'requestor_2': requestor_2, 'calendar_name':calendar_name } )
+  return HttpResponse( success_message )
+  #return success_message
 
 #@login_required
 def failure( error_msg ):
   '''render the failure template wih the error message'''
-  return render_to_response( 'failure.html', { 'error_msg': error_msg } )
+  #return render_to_response( 'failure.html', { 'error_msg': error_msg } )
+  return HttpResponse( error_msg )
 
 #@login_required
 def static( request, file ):

@@ -2,7 +2,7 @@
     <head>
         {% load static %}
         {% get_static_prefix as STATIC_URL %}
-        <link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
+        <link href="{{ STATIC_URL }}success_style.css" rel="stylesheet" type="text/css"/>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'>
 </script>
 <title>Google Calendar Edit Page:</title>
@@ -19,7 +19,9 @@
 <div id="response_div">
 <p>
 Success<br/>
+{% autoescape off %}
 Calendar: {{ success_message }}<br/>
+{% endautoescape %}
 {% if requestor_1 %}
 {{ requestor_1 }} is owner of {{ calendar_name }}<br/>
 {% endif %}
