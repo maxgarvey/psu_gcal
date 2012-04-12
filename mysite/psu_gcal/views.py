@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from cal_forms import NewCalendar
 from psugle.calresource import CalendarResource
 from support.calendar_util import calendar_validate, already_owner, \
-process_calendar, process_requestor
+process_calendar, process_requestor, requestor_validate
 
 #for debug
 import logging
@@ -50,28 +50,41 @@ def index(request):
                             calendar_name, calendar_already_exists, success )
 
                     if requestor_1:
-                        requestor_1_already_owner = already_owner(
-                            requestor_1, 
-                            acl, 
-                            client )
+                        if requestor_validate( requestor_1, client ):
+                            requestor_1_already_owner = already_owner(
+                                requestor_1, 
+                                acl, 
+                                client )
 
-                        response += process_requestor(
+                            response += process_requestor(
+                                requestor_1, 
+                                calendar_name, 
+                                requestor_1_already_owner, 
+                                acl, 
+                                client )
+
+                            response += process_requestor(
                                 requestor_1, 
                                 calendar_name, 
                                 requestor_1_already_owner, 
                                 client )
+                        else:
+                            response += '\n<br/>' + requestor_1 + ' is not a valid user'
 
                     if requestor_2:
-                        requestor_2_already_owner = already_owner(
-                            requestor_2,
-                            acl,
-                            client )
+                        if requestor_validate( requestor_2, client ):
+                            requestor_2_already_owner = already_owner(
+                                requestor_2,
+                                acl,
+                                client )
 
-                        response += process_requestor(
+                            response += process_requestor(
                                 requestor_2, 
                                 calendar_name, 
                                 requestor_2_already_owner, 
                                 client )
+                        else:
+                            response += '\n<br/>' + requestor_2 + ' is not a valid user'
 
                     return HttpResponse( response )
                 except Exception, err:
@@ -81,11 +94,3 @@ def index(request):
                     response += '\n<br/>requestor_2: ' + requestor_2
                     return HttpResponse( response )
 
-def static( request, static_file ):
-    '''this function serves static files from the static folder'''
-    try:
-        with open( '/static/'+static_file, 'r' ) as static_file:
-            response = static_file.read()
-        return HttpResponse( response )
-    except Exception, err:
-        return HttpResponse( err )

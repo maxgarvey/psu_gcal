@@ -1,5 +1,7 @@
 '''/psu_gcal/mysite/psu_gcal/support/calendar_validate.py'''
 
+from psugle.user import User
+
 def calendar_validate( calendar_name, client ):
     '''this function takes a calendar name and a client object and returns
     a boo telling whether the cal exists, and a boo if we're successful in
@@ -18,14 +20,14 @@ def calendar_validate( calendar_name, client ):
         try:
             client.create( name=str(calendar_name) )
             success = True
-        else:
+        except:
             pass
 
     #get acl
     if calendar_already_exists or success:
         try:
             acl = client.get_acl_by_name( calendar_name )
-        else:
+        except:
             acl = []
     else:
         acl = []
@@ -62,14 +64,25 @@ def process_requestor( requestor_name, calendar_name, already_owner, client ):
         try:
             add_owner(requestor_name, calendar_name, client)
             response += ' (new owner)'
-        else:
+        except Exception, err:
             response += ' is invalid user'
     return response
 
 def add_owner( requestor_name, calendar_name, client ):
-    '''this method adds an owner to a given list'''
+    '''this method adds a new owner to a calendar'''
     client.set_owner_by_name(name=calendar_name,owner=requestor_name)
 
+def requestor_validate( requestor, client ):
+    '''this method makes sure the user exists in the system'''
+    try:
+        user = User( client.domain )
+    except:
+        return False
+    if user.query_user( requestor )['exists']:
+        return True
+    else:
+        return False
+
 def process_form( form ):
-    '''this function returns the values submitted to the form'''
+    '''this method gets the different fields from the calendar form'''
     return form.cleaned_data['calendar_name'], form.cleaned_data['requestor_1'], form.cleaned_data['requestor_2']
