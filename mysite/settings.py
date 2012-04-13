@@ -1,13 +1,9 @@
 # Django settings for gcal project.
 import logging
 import logging.handlers
-import sys
-sys.path.append( '/var/www/psu_gcal' )
-sys.path.append( '/var/www/psu_gcal/psugle' )
-sys.path.append( '/var/www' )
 
-DEBUG = False
-#TEMPLATE_DEBUG = DEBUG
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -17,7 +13,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/var/www/psu_gcal/gcal_db', # Or path to database file if using sqlite3.
+        'NAME': '/home/maxgarvey/python/django/gcal_db', # Or path to database file if using sqlite3.
         'USER': 'root',                      # Not used with sqlite3.
         'PASSWORD': 'sql_root',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -125,8 +121,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/var/www/python/django/psu_gcal/mysite/templates',
-    '/var/www/python/django/psu_gcal/mysite/psu_gcal/templates',
+    '/home/maxgarvey/python/django/psu_gcal/mysite/templates',
+    '/home/maxgarvey/python/django/psu_gcal/mysite/psu_gcal/templates',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -146,6 +142,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'psu_gcal',
+    'django_nose',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -176,3 +173,5 @@ LOGGING = {
         },
     }
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
