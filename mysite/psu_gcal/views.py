@@ -45,7 +45,8 @@ def index(request):
                     calendar_already_exists, success, acl = calendar_validate( 
                     calendar_name, client )
 
-                    #print 'cal already exists: '+str(calendar_already_exists)+'\nsuccess: '+str(success)+'\nacl: '+str(acl) #debug
+                    #print 'cal already exists: '+str(calendar_already_exists)+'\nsuccess: '\
+                    #    +str(success)+'\nacl: '+str(acl) #debug
                     #create success message
                     response = process_calendar( 
                             calendar_name, calendar_already_exists, success )
@@ -81,7 +82,8 @@ def index(request):
                             response += '\n<br/>' + requestor_2 + ' is not a valid user'
 
                     #print str(response) #debug
-
+                    __logger__.info('user: ' + str(request.user) + ' has made the following request:\n' \
+                            + str(response))
                     return HttpResponse( response )
                 except Exception, err:
                     response = err
