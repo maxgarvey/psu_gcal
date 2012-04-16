@@ -36,7 +36,7 @@ def index(request):
                 return HttpResponse("form not valid...")
             #handle form submission
             else:
-                print 'form.cleaned_data: ' + str( form.cleaned_data ) #debug
+                #print 'form.cleaned_data: ' + str( form.cleaned_data ) #debug
                 calendar_name = form.cleaned_data['calendar_name']
                 requestor_1 = form.cleaned_data['requestor_1']
                 requestor_2 = form.cleaned_data['requestor_2']
@@ -45,6 +45,7 @@ def index(request):
                     calendar_already_exists, success, acl = calendar_validate( 
                     calendar_name, client )
 
+                    #print 'cal already exists: '+str(calendar_already_exists)+'\nsuccess: '+str(success)+'\nacl: '+str(acl) #debug
                     #create success message
                     response = process_calendar( 
                             calendar_name, calendar_already_exists, success )
@@ -53,13 +54,6 @@ def index(request):
                         if requestor_validate( requestor_1, client ):
                             requestor_1_already_owner = already_owner(
                                 requestor_1, 
-                                acl, 
-                                client )
-
-                            response += process_requestor(
-                                requestor_1, 
-                                calendar_name, 
-                                requestor_1_already_owner, 
                                 acl, 
                                 client )
 
@@ -85,6 +79,8 @@ def index(request):
                                 client )
                         else:
                             response += '\n<br/>' + requestor_2 + ' is not a valid user'
+
+                    #print str(response) #debug
 
                     return HttpResponse( response )
                 except Exception, err:
