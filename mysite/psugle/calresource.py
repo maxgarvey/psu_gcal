@@ -98,6 +98,12 @@ class CalendarResource:
         return [(entry.scope.value, entry.role.value)\
             for entry in acl_feed.entry]
 
+    def get_resource_by_name(self, name):
+        """gets a resource object by its name"""
+        resource = self.g_res_client.GetResource(
+            resource_id=md5(name).hexdigest()
+        )
+        return resource
 
     def set_owner_by_name(self, name=None, owner=None):
         """Add <owner> to the list of a resource's owners, given the
