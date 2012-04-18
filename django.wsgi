@@ -7,7 +7,7 @@ paths.append( '/var/www/psu_gcal/mysite' )
 paths.append( '/var/www/psu_gcal/mysite/psu_gcal' )
 
 for path in paths:
-  if path not in sys.path:
+  if not (path in sys.path):
     sys.path.append(path)
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
