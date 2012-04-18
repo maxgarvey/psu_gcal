@@ -70,9 +70,9 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    '/home/maxgarvey/python/django/psu_gcal/static',
-    '/home/maxgarvey/python/django/psu_gcal/mysite/static',
-    '/home/maxgarvey/python/django/psu_gcal/mysite/psu_gcal/static',
+    '/home/maxgarvey/psu_gcal/mysite/static',
+    #'/home/maxgarvey/python/django/psu_gcal/mysite/static',
+    #'/home/maxgarvey/python/django/psu_gcal/mysite/psu_gcal/static',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -121,8 +121,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/maxgarvey/python/django/psu_gcal/mysite/templates',
-    '/home/maxgarvey/python/django/psu_gcal/mysite/psu_gcal/templates',
+    '/home/maxgarvey/psu_gcal/mysite/templates',
+    '/home/maxgarvey/psu_gcal/mysite/psu_gcal/templates',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

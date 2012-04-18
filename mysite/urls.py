@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^cal/$', include('psu_gcal.urls')),
+    url(r'^group/$', include('psu_gcal.urls')),
     url(r'^$', include('psu_gcal.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

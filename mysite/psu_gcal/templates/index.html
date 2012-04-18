@@ -13,9 +13,15 @@
 <script type="text/javascript">
 $(document).ready( function(){
 
+  function resetForm(_form){
+    _form.find('input:text, input:password, input:file, select').val('');
+    _form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+  }
+
   //this block hides the forms initially
-  $("#create_edit_calendar").addClass("inner").hide();
+  $("#calendar").addClass("inner").hide();
   $("#instructions_div").addClass("inner").hide();
+  $("#group").addClass("inner").hide();
   $("#success").addClass("inner").hide();
   $("#waiting").addClass("inner").hide();
 
@@ -23,25 +29,36 @@ $(document).ready( function(){
   //and the relevant one will be displayed
   $("#create_edit_calendar_view").click( function(){
     $("#instructions_div").slideUp();
+    $("#group").slideUp();
     $("#success").hide();
     $("#waiting").hide();
-    $("#create_edit_calendar").slideDown();
+    $("#calendar").slideDown();
+    resetForm($("#group_form"));
   });
   $("#instructions_view").click( function(){
-    $("#create_edit_calendar").slideUp();
+    $("#calendar").slideUp();
+    $("#group").slideUp();
     $("#success").hide();
     $("#waiting").hide()
     $("#instructions_div").slideDown();
   });
+  $("#group_form_view").click( function(){
+    $("#calendar").slideUp();
+    $("#instructions_div").slideUp();
+    $("#success").hide();
+    $("#waiting").hide()
+    $("#group").slideDown();
+    resetForm($("#calendar_form"));
+  });
 
-  $("#submit").click( function() {
+  $("#calendar_submit").click( function() {
     $.ajax({
       url:"/cal/",
       type:"POST",
       data:"csrfmiddlewaretoken="+$("input[type=hidden][name=csrfmiddlewaretoken]").attr("value")+
         "&calendar_name="+$("input[name=calendar_name]").val()+
-        "&requestor_1="+$("input[name=requestor_1]").val()+
-        "&requestor_2="+$("input[name=requestor_2]").val(),
+        "&calendar_requestor_1="+$("input[name=calendar_requestor_1]").val()+
+        "&calendar_requestor_2="+$("input[name=calendar_requestor_2]").val(),
       success:function(a){
         $('#waiting').slideUp();
         $('#success').html('<div id="form_div">'+a+' </div>');
@@ -49,11 +66,33 @@ $(document).ready( function(){
       }
       });
     $("#instructions_div").slideUp();
-    $("#create_edit_calendar").slideUp();
+    $("#group").slideUp();
+    $("#calendar").slideUp();
     $("#waiting").slideDown();
     });
 
-  //$("#success").hide();
+  $("#group_submit").click( function() {
+    $.ajax({
+      url:"/group/",
+      type:"POST",
+      data:"csrfmiddlewaretoken="+$("input[type=hidden][name=csrfmiddlewaretoken]").attr("value")+
+        "&group_email="+$("input[name=group_email]").val()+
+        "&group_name="+$("input[name=group_name]").val()+
+        "&group_description="+$("input[name=group_description]").val()+
+        "&group_requestor_1="+$("input[name=group_requestor_1]").val()+
+        "&group_requestor_2="+$("input[name=group_requestor_2]").val(),
+      success:function(a){
+        $('#waiting').slideUp();
+        $('#success').html('<div id="form_div">'+a+' </div>');
+        $('#success').slideDown();
+      }
+      });
+    $("#instructions_div").slideUp();
+    $("#group").slideUp();
+    $("#calendar").slideUp();
+    $("#waiting").slideDown();
+    });
+
   }
 );
 </script>
@@ -67,6 +106,9 @@ $(document).ready( function(){
 <li id="create_edit_calendar_view"><div id="navbar_div_left">
 Calendar Form
 </div></li>
+<li id="group_form_view"><div id="navbar_div">
+Group Form
+</div></li>
 <li id="instructions_view"><div id="navbar_div">
 Instructions
 </div></li>
@@ -78,26 +120,57 @@ Logout
 </ul>
 </div>
 
-<div id="create_edit_calendar">
+<div id="calendar">
 <div id="form_div">
-<form action='/cal/' method='post'>
+<form id="calendar_form" action='/cal/' method='post'>
     {% csrf_token %}
-    {{ form.non_field_errors }}
+    {{ calendar_form.non_field_errors }}
 <label for="calendar_name">Name of Calendar</label>
 <br/>
-{{ form.calendar_name }}
+{{ calendar_form.calendar_name }}
 <br/>
-<label for="requestor">Requestor</label>
+<label for="calendar_requestor_1">Requestor</label>
 <br/>
-{{ form.requestor_1 }}
+{{ calendar_form.calendar_requestor_1 }}
 <br/>
-<label for="secondary">Secondary Requestor</label>
+<label for="calendar_requestor_2">Second Requestor</label>
 <br/>
-{{ form.requestor_2 }}
+{{ calendar_form.calendar_requestor_2 }}
 <br/>
-<!-- <input name="submit" type="submit"/> -->
-<div id="submit">
-Submit
+<div id="calendar_submit">
+<strong>Submit</strong>
+</div>
+</form>
+</div>
+</div>
+
+<div id="group">
+<div id="form_div">
+<form id="group_form" action='/cal/' method='post'>
+    {% csrf_token %}
+    {{ group_form.non_field_errors }}
+<label for="group_email">Group Email</label>
+<br/>
+{{ group_form.group_email }}
+<br/>
+<label for="group_name">Group Name</label>
+<br/>
+{{ group_form.group_name }}
+<br/>
+<label for="group_description">Group Description</label>
+<br/>
+{{ group_form.group_description }}
+<br/>
+<label for="group_requestor_1">Requestor</label>
+<br/>
+{{ group_form.group_requestor_1 }}
+<br/>
+<label for="group_requestor_2">Secondary Requestor</label>
+<br/>
+{{ group_form.group_requestor_2 }}
+<br/>
+<div id="group_submit">
+<strong>Submit</strong>
 </div>
 </form>
 </div>
@@ -106,11 +179,19 @@ Submit
 <div id="instructions_div">
 <div id='form_div'>
 <p>
+<strong>Calendars</strong><br/>
 To use this form, enter the name of a calendar. <br/>
 If it is not an existing calendar, it will be created. <br/>
 If it is an existing calendar, this will query it. <br/>
 After being created or queried, the requestors will <br/>
-be added as owners of the calendar.
+be added as owners of the calendar.<br/><br/>
+<strong>Groups</strong><br/>
+To use this form, enter the name of a group, with capitalization.<br/>
+ex: AAA-TripleA-Group, BAC-KToTheFuture-Group <br/>
+If it is not an existing group, it will be created. <br/>
+If it is an existing group, this will query it. <br/>
+After being created or queried, the requestors will <br/>
+be added as owners of the group.<br/>
 </p>
 </div>
 </div>
