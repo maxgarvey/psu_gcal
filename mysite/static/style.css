@@ -108,7 +108,7 @@ body {
   background-color:  #ccd1d9;
 }
 
-#header {
+/*#header {
   margin-left: 8%;
   margin-right: 0%;
   margin-top: 0%;
@@ -116,10 +116,10 @@ body {
   width:            500px;
   height:           120px;
   text-align:       center;
-  /*background-color: #f0f0ff;
-  border-color:     #f0f0ff;*/
+  background-color: #f0f0ff;
+  border-color:     #f0f0ff;
   background-color: #ebebf2;
-}
+}*/
 
 #form_div {
   margin-left:   40px;

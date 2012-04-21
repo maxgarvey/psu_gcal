@@ -13,9 +13,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/maxgarvey/python/django/gcal_db', # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': 'sql_root',                  # Not used with sqlite3.
+        'NAME': '/home/maxgarvey/psu_gcal/psu_gcal.db', # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -57,7 +57,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = '/home/maxgarvey/psu_gcal/mysite/static'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -115,14 +115,14 @@ CAS_IGNORE_REFERER = False
 CAS_LOGOUT_COMPLETELY = True
 SESSION_COOKIE_NAME = 'NO_CACHE'
 
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     '/home/maxgarvey/psu_gcal/mysite/templates',
-    '/home/maxgarvey/psu_gcal/mysite/psu_gcal/templates',
+    #'/home/maxgarvey/psu_gcal/mysite/psu_gcal/templates',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -141,8 +141,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'psu_gcal',
+    #'psu_gcal',
     'django_nose',
+    'mysite',
 )
 
 # A sample logging configuration. The only tangible logging

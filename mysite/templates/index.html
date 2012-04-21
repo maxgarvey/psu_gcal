@@ -76,7 +76,6 @@ $(document).ready( function(){
       url:"/group/",
       type:"POST",
       data:"csrfmiddlewaretoken="+$("input[type=hidden][name=csrfmiddlewaretoken]").attr("value")+
-        "&group_email="+$("input[name=group_email]").val()+
         "&group_name="+$("input[name=group_name]").val()+
         "&group_description="+$("input[name=group_description]").val()+
         "&group_requestor_1="+$("input[name=group_requestor_1]").val()+
@@ -149,10 +148,6 @@ Logout
 <form id="group_form" action='/cal/' method='post'>
     {% csrf_token %}
     {{ group_form.non_field_errors }}
-<label for="group_email">Group Email</label>
-<br/>
-{{ group_form.group_email }}
-<br/>
 <label for="group_name">Group Name</label>
 <br/>
 {{ group_form.group_name }}
@@ -179,12 +174,14 @@ Logout
 <div id="instructions_div">
 <div id='form_div'>
 <p>
+
 <strong>Calendars</strong><br/>
 To use this form, enter the name of a calendar. <br/>
 If it is not an existing calendar, it will be created. <br/>
 If it is an existing calendar, this will query it. <br/>
 After being created or queried, the requestors will <br/>
 be added as owners of the calendar.<br/><br/>
+
 <strong>Groups</strong><br/>
 To use this form, enter the name of a group, with capitalization.<br/>
 ex: AAA-TripleA-Group, BAC-KToTheFuture-Group <br/>
@@ -192,6 +189,7 @@ If it is not an existing group, it will be created. <br/>
 If it is an existing group, this will query it. <br/>
 After being created or queried, the requestors will <br/>
 be added as owners of the group.<br/>
+
 </p>
 </div>
 </div>

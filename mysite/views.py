@@ -1,7 +1,7 @@
 '''psu_gcal/mysite/psu_gcal/views.py'''
 
 from django.shortcuts import render_to_response 
-from django.http import HttpResponse 
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
 from my_forms import CalendarForm, GroupForm
@@ -124,7 +124,6 @@ def index(request):
             else:
                 '''DEBUGS VVVV'''
                 #print 'form.cleaned_data: ' + str( form.cleaned_data ) #debug
-                group_email = form.cleaned_data['group_email']
                 group_name = form.cleaned_data['group_name']
                 group_description = form.cleaned_data['group_description']
                 group_requestor_1 = form.cleaned_data['group_requestor_1']
@@ -198,3 +197,12 @@ def index(request):
                     response += '\n<br/>requestor_1: ' + requestor_1
                     response += '\n<br/>requestor_2: ' + requestor_2
                     return HttpResponse( response )
+
+#def static(file, soemthing, **kwargs ):
+#    '''this function serves static files from the static folder'''
+#    try:
+#        #with open( '/static/'+static_file, 'r' ) as static_file:
+#            #response = static_file.read()
+#        return HttpResponse( '' )
+#    except Exception, err:
+#        return HttpResponse( err )

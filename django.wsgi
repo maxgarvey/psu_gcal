@@ -2,9 +2,8 @@ import os
 import sys
 
 paths = []
-paths.append( '/var/www/psu_gcal' )
-paths.append( '/var/www/psu_gcal/mysite' )
-paths.append( '/var/www/psu_gcal/mysite/psu_gcal' )
+paths.append( '/home/maxgarvey/psu_gcal' )
+paths.append( '/home/maxgarvey/' )
 
 for path in paths:
   if not (path in sys.path):
