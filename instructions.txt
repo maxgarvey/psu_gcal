@@ -1,13 +1,17 @@
-1. First, verify that django is installed, go to shell:
+1. Create a virtual env with py 2.6 or 2.7
+
+2. Install django in env (with cmd "pip install django==1.3.1"), go to shell:
 import django
 if it works, continue
 
-2. run: django-admin.py startproject psu_gcal
+3. run: django-admin.py startproject psu_gcal
    \\if that doesn't work, try django-admin startproject psu_gcal
    \\its bad to put this stuff in the doc root bcuz then folks might
    \\be able to see the code you're running
 
-3. edit settings.py to have the correct database...
+4. move in the source files to the newly created psu_gcal directory
+
+5. edit settings.py to have the correct paths, and the correct database...
    \\FOR SQLite3: just insert the desired location for the db file
       \\it will automatically be created when you sync the first time.
       \\don't enter a name, password, host, or port
@@ -17,15 +21,20 @@ if it works, continue
     ***don't actually have to make it from scratch, just use the one from
     git; DO EDIT THE PATHS THO, thx***
 
-4. run manage.py syncdb
+6. edit permissions on parent dir so that django can create the new db
+
+7. run manage.py syncdb
    \\this step creates the db and allows you to create a superuser acct
    \\for django admin
 
-5. At this point, got to set up the permission, using models.py file...
+8. edit permissions on the newly created db
+
+*** VVV THIS SHOULD AUTOMATICALLY HAPPEN NOW VVV ***
+9. At this point, got to set up the permission, using models.py file...
    To do this, edit settings, INSTALLED_APPS to point to the dir that
    the models.py script is in.
 
-6. Add yourself as superadmin, via the shell: python manage.py shell
+10. Add yourself as superadmin, via the shell: python manage.py shell
       >>> from django.conf import settings
       >>> from django.contrib.auth.models import User, check_password
       >>> user = User.objects.get(username='magarvey')
@@ -35,8 +44,8 @@ if it works, continue
       >>> user.is_superuser = True
       >>> user.save()
 
-7. Edit the apache vhost conf from the root dir in the git version
+11. Edit the apache vhost conf from the root dir in the git version
    and place it in the proper location.
 
-8. Give apache read write permissions to the db file as well as the directory
+12. Give apache read write permissions to the db file as well as the directory
    containing the db.
