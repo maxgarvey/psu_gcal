@@ -131,7 +131,7 @@ def index(request):
                 '''DEBUGS ^^^^'''
 
                 #group_email, group_name, group_description, group_requestor_1, group_requestor_2 = group_process_form(form)
-                print str(group_email)+ str(group_name)+ str(group_description) + str(group_requestor_1) + str( group_requestor_2)
+                __logger__.info('\ngroup_name: ' + str(group_name) + '\ngroup_description: ' + str(group_description) + '\ngroup_requestor_1: ' + str(group_requestor_1) + '\ngroup_requestor_2: ' + str( group_requestor_2))
 
 
                 '''DEBUG VVVV'''

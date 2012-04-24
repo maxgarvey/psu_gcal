@@ -1,7 +1,8 @@
 '''/psu_gcal/mysite/psu_gcal/test.py'''
 
 import sys
-sys.path.append('/home/maxgarvey/python/django/psu_gcal/mysite/psu_gcal/')
+sys.path.append('/var/www/psu_gcal/')
+sys.path.append('/var/www/psu_gcal/mysite/')
 
 from support.calendar_util import calendar_validate, calendar_already_owner, \
     process_calendar, calendar_process_requestor, calendar_add_owner, \
