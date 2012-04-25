@@ -28,16 +28,17 @@ def group_already_owner( requestor, group_name, client ):
     a boolean as to whether the requestor is already an owner'''
     return client.g_client.IsOwner(owner_email=requestor+'@'+client.domain, group_id=group_name+'@'+client.domain)
 
-def process_group( group_name, group_already_exists, success ):
+def process_group( group_name, group_description,  group_already_exists, success ):
     '''this function generates the part of the success message dealing with
     the group'''
-    response = group_name
+    response = 'group name: ' + group_name
     if success:
         response += ' (new group)'
     elif group_already_exists:
         response += ' (existing group)'
     else:
-        response =  'could not make group: '+group_name
+        response =  'could not make group: ' + group_name
+    response += '\n<br/>group description: ' + group_description
     return response
 
 def group_process_requestor( requestor_name, group_name, already_owner, client ):

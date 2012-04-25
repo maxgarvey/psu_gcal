@@ -1,0 +1,125 @@
+/**
+ *  Reset browser default styles.
+ */
+
+
+/* document elements */
+	html, body,
+
+/* basic elements */
+	div, span, p,
+
+/* headings */
+	h1, h2, h3, h4, h5, h6,
+	object, iframe,
+
+/* basic inline elements */
+	a, b, i, em, strong, img,
+
+/* quote elements */
+	blockquote, pre, q, cite,
+
+/* inline elements */
+	abbr, acronym, address, code, del, ins,
+
+/* list elements */
+	dl, dt, dd, dfn, ol, ul, li,
+
+/* form elements */
+	form, fieldset, label, legend,
+
+/* table elements */
+	table, caption, thead, tbody, tfood, tr, th, td {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		outline: 0;
+		vertical-align: baseline;
+		font-weight: inherit;
+		font-style: inherit;
+		font-size: 100%;
+	}
+	
+/* reset lists */
+	ol, ul {
+		list-style: none;
+	}
+
+/* set basic list styles */
+	ol {
+		list-style-type: decimal;
+	}
+	ul {
+		list-style-type: disc;
+	}
+
+/* reset tables */
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+
+	caption {
+		text-align: left;
+	}
+/* remove border from image links */
+	a img {
+		border: none;
+	}
+
+/* set basic inline styles */
+	em {
+		font-style: italic;
+	}
+
+	strong {
+		font-weight: bold;
+	}
+	
+	i {
+		font-style: italic;
+	}
+	b {
+		font-weight: bold;
+	}
+
+/* reset inline styles */
+	address, caption, cite, code, dfn, th, var {
+		font-style: normal;
+		font-weight: normal;
+	}
+	
+/* reset headings */
+	h1, h2, h3, h4, h5, h6 {
+		font-weight: normal;
+	}
+	
+/* remove border from image headings */
+	h1 img, h2 img, h3 img, h4 img, h5 img, h6 img {
+		border: 0;
+	}
+
+/* set basic quote styles */
+	blockquote:before, blockquote:after, q:before, q:after {
+		content: "";
+	}
+	
+	blockquote, q {
+		quotes: "" "";
+	}
+
+/* reset form fonts */
+	input, textarea, select {
+		font-family: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+	}
+	
+/* reset alignment for subscript and superscript */
+	sub {
+		vertical-align: text-bottom;
+	}
+	
+	sup {
+		vertical-align: text-top;
+	}

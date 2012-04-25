@@ -35,10 +35,6 @@ def index(request):
                     { 'calendar_form':calendar_form, 'group_form':group_form },
                     context_instance=RequestContext(request)  )
 
-        #else: #debug debug debug
-        #    print str(request.POST.keys())
-        #    print (u'calendar_name' in request.POST.keys())
-
         #if it's the calendar form that they submitted
         elif (u'calendar_name' in request.POST.keys()):
             form = CalendarForm( request.POST )
@@ -47,15 +43,8 @@ def index(request):
                 return HttpResponse("form not valid...")
             #handle form submission
             else:
-                #print 'form.cleaned_data: ' + str( form.cleaned_data ) #debug
-                #calendar_name = form.cleaned_data['calendar_name']
-                #calendar_requestor_1 = form.cleaned_data['calendar_requestor_1']
-                #calendar_requestor_2 = form.cleaned_data['calendar_requestor_2']
-                #print 'request.post: ' + str(request.POST)
                 calendar_name, calendar_requestor_1, calendar_requestor_2 = \
                     calendar_process_form(form)
-                #print 'calendar_name: '+str(calendar_name)+' calendar_requestor_1:'+str(calendar_requestor_1)+\
-                #    'calendar_requestor_2: '+str(calendar_requestor_2)
                 try:
                     client = CalendarResource( 'gtest.pdx.edu' )
                     #print str(client) #debug
@@ -65,8 +54,6 @@ def index(request):
                     except Exception, err:
                         print err
 
-                    #print 'cal already exists: '+str(calendar_already_exists)+'\nsuccess: '+\
-                    #    str(success)+'\nacl: '+str(acl) #debug
                     #create success message
                     response = process_calendar( 
                             calendar_name, calendar_already_exists, success )
@@ -101,7 +88,6 @@ def index(request):
                         else:
                             response += '\n<br/>' + calendar_requestor_2 + ' is not a valid user'
 
-                    #print str(response) #debug
                     __logger__.info('user: ' + str(request.user) + ' has made the following request:\n' \
                             + str(response))
                     return HttpResponse( response )
@@ -117,43 +103,23 @@ def index(request):
         else:
             form = GroupForm( request.POST )
             #check if form valid
-            #print 'request.post: '+str(request.POST) #debug
             if not form.is_valid():
                 return HttpResponse("form not valid...")
             #handle form submission
             else:
-                '''DEBUGS VVVV'''
-                #print 'form.cleaned_data: ' + str( form.cleaned_data ) #debug
                 group_name = form.cleaned_data['group_name']
                 group_description = form.cleaned_data['group_description']
                 group_requestor_1 = form.cleaned_data['group_requestor_1']
                 group_requestor_2 = form.cleaned_data['group_requestor_2']
-                '''DEBUGS ^^^^'''
-
-                #group_email, group_name, group_description, group_requestor_1, group_requestor_2 = group_process_form(form)
-                __logger__.info('\ngroup_name: ' + str(group_name) + '\ngroup_description: ' + str(group_description) + '\ngroup_requestor_1: ' + str(group_requestor_1) + '\ngroup_requestor_2: ' + str( group_requestor_2))
-
-
-                '''DEBUG VVVV'''
-                #print 'group_email: '+str(group_email)+' group_name: '+str(group_name)+\
-                #    ' group_desc: '+str(group_description)+' group_requestor_1: '+\
-                #    str(group_requestor_1)+' group_requestor_2: '+str(group_requestor_2) #debug
-                '''DEBUG ^^^^'''
-
-                #print 'debug' #debug
 
                 try:
                     client = Group( 'gtest.pdx.edu' )
-                    #print 'debug' #debug
                     group_already_exists, success = group_validate( 
                     group_name, group_description, client )
 
-                    #print 'group already exists: '+str(group_already_exists)+'\nsuccess: '\
-                    #    +str(success) #debug
                     #create success message
                     response = process_group( 
-                            group_name, group_already_exists, success )
-                    #print response #debug
+                            group_name, group_description, group_already_exists, success )
 
                     if group_requestor_1:
                         if requestor_validate( group_requestor_1, client ):
@@ -169,7 +135,6 @@ def index(request):
                                 client )
                         else:
                             response += '\n<br/>' + group_requestor_1 + ' is not a valid user'
-                    print response #debug
 
                     if group_requestor_2:
                         if requestor_validate( group_requestor_2, client ):
@@ -186,23 +151,15 @@ def index(request):
                         else:
                             response += '\n<br/>' + group_requestor_2 + ' is not a valid user'
 
-                    print str(response) #debug
                     __logger__.info('user: ' + str(request.user) + ' has made the following request:\n' \
-                            + str(response))
+                            + str(response) + '\n')
                     return HttpResponse( response )
 
                 except Exception, err:
                     response = err
-                    response += '\n<br/>calendar name: ' + calendar_name
-                    response += '\n<br/>requestor_1: ' + requestor_1
-                    response += '\n<br/>requestor_2: ' + requestor_2
-                    return HttpResponse( response )
+                    response += '\n<br/>group name: ' + group_calendar_name
+                    response += '\n<br/>description:' +      group_description
+                    response += '\n<br/>requestor 1: ' +     group_requestor_1
+                    response += '\n<br/>requestor 2: ' +     group_requestor_2
 
-#def static(file, soemthing, **kwargs ):
-#    '''this function serves static files from the static folder'''
-#    try:
-#        #with open( '/static/'+static_file, 'r' ) as static_file:
-#            #response = static_file.read()
-#        return HttpResponse( '' )
-#    except Exception, err:
-#        return HttpResponse( err )
+                    return HttpResponse( response )

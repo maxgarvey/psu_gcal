@@ -13,7 +13,7 @@ for path in paths:
     sys.path.append(path)
 
 #debug
-print 'syspath: ' + str(sys.path)
+#print 'syspath: ' + str(sys.path)
 #print 'py home: ' + str(os.environ['HOME'])
 #end debug
 

@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^accounts/login/$', 'django_cas.views.login'),
     url(r'^accounts/logout/$', 'django_cas.views.logout'),
+    url(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url':'static/favicon.ico'}),
 )
