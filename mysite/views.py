@@ -22,7 +22,7 @@ def index(request):
     '''this is the index method, it serves and handles the calendar creation
     owner addition functionality'''
     #check for correct permission
-    if not request.user.has_perm('psu_gcal.psu_gcal'):
+    if not request.user.has_perm('mysite.psu_gcal'):
         return render_to_response('invalid.html')
     else:
         #check if form submitted
@@ -49,8 +49,8 @@ def index(request):
                     client = CalendarResource( 'gtest.pdx.edu' )
                     #print str(client) #debug
                     try:
-                        calendar_already_exists, success, acl = calendar_validate( 
-                        calendar_name, client )
+                        calendar_already_exists, success, acl = \
+                            calendar_validate( calendar_name, client )
                     except Exception, err:
                         print err
 
@@ -71,7 +71,8 @@ def index(request):
                                 requestor_1_already_owner, 
                                 client )
                         else:
-                            response += '\n<br/>' + calendar_requestor_1 + ' is not a valid user'
+                            response += '\n<br/>' + calendar_requestor_1 + \
+                                ' is not a valid user'
 
                     if calendar_requestor_2:
                         if requestor_validate( calendar_requestor_2, client ):
@@ -86,10 +87,11 @@ def index(request):
                                 requestor_2_already_owner, 
                                 client )
                         else:
-                            response += '\n<br/>' + calendar_requestor_2 + ' is not a valid user'
+                            response += '\n<br/>' + calendar_requestor_2 + \
+                                ' is not a valid user'
 
-                    __logger__.info('user: ' + str(request.user) + ' has made the following request:\n' \
-                            + str(response))
+                    __logger__.info('user: ' + str(request.user) + \
+                        ' has made the following request:\n' + str(response))
                     return HttpResponse( response )
 
                 except Exception, err:
@@ -119,7 +121,8 @@ def index(request):
 
                     #create success message
                     response = process_group( 
-                            group_name, group_description, group_already_exists, success )
+                        group_name, group_description, 
+                        group_already_exists, success )
 
                     if group_requestor_1:
                         if requestor_validate( group_requestor_1, client ):
@@ -130,11 +133,12 @@ def index(request):
 
                             response += group_process_requestor(
                                 group_requestor_1, 
-                                calendar_name, 
+                                group_name, 
                                 requestor_1_already_owner, 
                                 client )
                         else:
-                            response += '\n<br/>' + group_requestor_1 + ' is not a valid user'
+                            response += '\n<br/>' + group_requestor_1 + \
+                                ' is not a valid user'
 
                     if group_requestor_2:
                         if requestor_validate( group_requestor_2, client ):
@@ -145,21 +149,23 @@ def index(request):
 
                             response += group_process_requestor(
                                 group_requestor_2, 
-                                calendar_name, 
+                                group_name, 
                                 requestor_2_already_owner, 
                                 client )
                         else:
-                            response += '\n<br/>' + group_requestor_2 + ' is not a valid user'
+                            response += '\n<br/>' + group_requestor_2 + \
+                                ' is not a valid user'
 
-                    __logger__.info('user: ' + str(request.user) + ' has made the following request:\n' \
-                            + str(response) + '\n')
+                    __logger__.info('user: ' + str(request.user) + \
+                        ' has made the following request:\n' \
+                        + str(response) + '\n')
                     return HttpResponse( response )
 
                 except Exception, err:
-                    response = err
-                    response += '\n<br/>group name: ' + group_calendar_name
-                    response += '\n<br/>description:' +      group_description
-                    response += '\n<br/>requestor 1: ' +     group_requestor_1
-                    response += '\n<br/>requestor 2: ' +     group_requestor_2
+                    response = str(err)
+                    response += '\n<br/>group name: '  +             str(group_name)
+                    response += '\n<br/>description:'  +      str(group_description)
+                    response += '\n<br/>requestor 1: ' +      str(group_requestor_1)
+                    response += '\n<br/>requestor 2: ' +      str(group_requestor_2)
 
                     return HttpResponse( response )

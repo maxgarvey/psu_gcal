@@ -48,6 +48,10 @@
   position:        relative;
 }
 
+.app_nav_li {
+cursor: hand; cursor: pointer;
+}
+
 li {
   float:        left;
   position: relative;
@@ -82,4 +86,8 @@ a {
   border-width:         2px;
   background-color: #ccd1d9;
   float:            inherit;
+}
+
+.submit_div {
+cursor: hand; cursor: pointer;
 }

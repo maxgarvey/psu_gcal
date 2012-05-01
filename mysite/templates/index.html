@@ -7,27 +7,23 @@
   <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}layout.css" />
   <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css"  />
   <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
-  <title>Google Calendar Edit Page:</title>
+  <title>Google Calendar/Group Mgmt.</title>
   <meta charset="utf-8">
  </head>
  <body>
-
-
   <script type="text/javascript">
    $(document).ready( function(){
-
+   //this function resets a form
    function resetForm(_form){
     _form.find('input:text, input:password, input:file, select').val('');
     _form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
    }
-
    //this block hides the forms initially
    $("#calendar").addClass("inner").hide();
    $("#instructions_div").addClass("inner").hide();
    $("#group").addClass("inner").hide();
    $("#success").addClass("inner").hide();
    $("#waiting").addClass("inner").hide();
-
    //for each button, the other forms will slide up
    //and the relevant one will be displayed
    $("#create_edit_calendar_view").click( function(){
@@ -36,6 +32,8 @@
     $("#success").hide();
     $("#waiting").hide();
     $("#calendar").slideDown();
+    //this line resets the form when the user clicks 
+    //on the button for the other form
     resetForm($("#group_form"));
    });
    $("#instructions_view").click( function(){
@@ -51,9 +49,11 @@
     $("#success").hide();
     $("#waiting").hide()
     $("#group").slideDown();
+    //this line resets the form when the user clicks 
+    //on the button for the other form
     resetForm($("#calendar_form"));
    });
-
+   //this block spoofs a form submit for the calendar form
    $("#calendar_submit").click( function() {
     $.ajax({
       url:"/cal/",
@@ -74,7 +74,7 @@
      $("#calendar").slideUp();
      $("#waiting").slideDown();
     });
-
+   //this block spoofs a form submit for the group form
    $("#group_submit").click( function() {
     $.ajax({
      url:"/group/",
@@ -98,172 +98,164 @@
   }
   );
   </script>
+  <div id="page">
 
-
-    <div id="page">
-    <div id="header-overlay">
-      <ul id="utility-nav">
-        <li>
-          <a href="https://my.pdx.edu/">myPSU</a>
-        </li>
-        <li class="last">
-          <a href="http://www.pdx.edu/contact">Contact PSU</a>
-        </li>
-      </ul>
-    </div>
-    <div id="header-wrap">
-      <hr class="header-deco">
-      <div id="header">
-        <a href="http://www.pdx.edu/" title="Home" rel="home" id="logo">
-          <img src="{{ STATIC_URL }}logo.png" alt="Home">
-        </a>
-      </div>
-    </div>
-    <div id="main-wrap">
-      <div id="main">
-        <ul id="navigation">
-          <li class=""><a href="http://www.pdx.edu/admissions" title="">Admissions</a></li> 
-          <li class=""><a href="http://www.pdx.edu/schools-colleges">Schools &amp; Colleges</a></li> 
-          <li class=""><a href="http://www.pdx.edu/academic-programs" class="active-trail active">Academic Programs</a></li> 
-          <li class=""><a href="http://www.pdx.edu/campus">Campus</a></li>
-          <li class="last"><a href="http://www.pdx.edu/alumni">Alumni</a></li> 
-        </ul>
-        <div id="container">
-
-
-
-
-  <div id="outer">
-  <div id="google_header">
-   <h1>Google Utility</h1>
-   <ul id="navbar">
-    <div id="navbar_posish">
-     <li id="create_edit_calendar_view">
-      <div id="navbar_div_left">
-       Calendar Form
-      </div>
+   <div id="header-overlay">
+    <ul id="utility-nav">
+     <li>
+      <a href="https://my.pdx.edu/">myPSU</a>
      </li>
-     <li id="group_form_view">
-      <div id="navbar_div">
-       Group Form
-      </div>
+     <li class="last">
+      <a href="http://www.pdx.edu/contact">Contact PSU</a>
      </li>
-     <li id="instructions_view">
-      <div id="navbar_div">
-       Instructions
-      </div>
-     </li>
-     <a href="/accounts/logout" >
-      <li id="logout_button">
-       <div id="navbar_div">
-        Logout
-       </div>
-      </li>
-     </a>
     </ul>
-   </div>
-  <div id="calendar">
-   <div id="form_div">
-    <form id="calendar_form" action='/cal/' method='post'>
-     {% csrf_token %}
-     {{ calendar_form.non_field_errors }}
-     <label for="calendar_name">Name of Calendar</label>
-     <br/>
-     {{ calendar_form.calendar_name }}
-     <br/>
-     <label for="calendar_requestor_1">Requestor</label>
-     <br/>
-     {{ calendar_form.calendar_requestor_1 }}
-     <br/>
-     <label for="calendar_requestor_2">Second Requestor</label>
-     <br/>
-     {{ calendar_form.calendar_requestor_2 }}
-     <br/>
-     <div id="calendar_submit">
-      <strong>Submit</strong>
-     </div>
-    </form>
-   </div>
-  </div>
-  <div id="group">
-   <div id="form_div">
-    <form id="group_form" action='/cal/' method='post'>
-     {% csrf_token %}
-     {{ group_form.non_field_errors }}
-     <label for="group_name">Group Name</label>
-     <br/>
-     {{ group_form.group_name }}
-     <br/>
-     <label for="group_description">Group Description</label>
-     <br/>
-     {{ group_form.group_description }}
-     <br/>
-     <label for="group_requestor_1">Requestor</label>
-     <br/>
-     {{ group_form.group_requestor_1 }}
-     <br/>
-     <label for="group_requestor_2">Secondary Requestor</label>
-     <br/>
-     {{ group_form.group_requestor_2 }}
-     <br/>
-     <div id="group_submit">
-      <strong>Submit</strong>
-     </div>
-    </form>
-   </div>
-  </div>
-  <div id="instructions_div">
-   <div id='form_div'>
-    <p>
-     <strong>Calendars</strong><br/>
-     To use this form, enter the name of a calendar. <br/>
-     If it is not an existing calendar, it will be created. <br/>
-     If it is an existing calendar, this will query it. <br/>
-     After being created or queried, the requestors will <br/>
-     be added as owners of the calendar.<br/><br/>
-     <strong>Groups</strong><br/>
-     To use this form, enter the name of a group, with capitalization.<br/>
-     ex: AAA-TripleA-Group, BAC-KToTheFuture-Group <br/>
-     If it is not an existing group, it will be created. <br/>
-     If it is an existing group, this will query it. <br/>
-     After being created or queried, the requestors will <br/>
-     be added as owners of the group.<br/>
-    </p>
-   </div>
-  </div>
-  <div id="success">
-   <div id="form_div">
-   </div>
-  </div>
+   </div><!-- header-overlay -->
 
-  <div id="waiting">
-   <div id="form_div">
-    Waiting for response...
-   </div>
-  </div>
+   <div id="header-wrap">
+    <hr class="header-deco">
+    <div id="header">
+     <a href="http://www.pdx.edu/" title="Home" rel="home" id="logo">
+      <img src="{{ STATIC_URL }}logo.png" alt="Home">
+     </a>
+    </div><!-- header -->
+   </div><!-- header-wrap -->
 
- </div>
+   <div id="main-wrap">
+    <div id="main">
+     <ul id="navigation">
+      <li class=""><a href="http://www.pdx.edu/admissions" title="">Admissions</a></li> 
+      <li class=""><a href="http://www.pdx.edu/schools-colleges">Schools &amp; Colleges</a></li> 
+      <li class=""><a href="http://www.pdx.edu/academic-programs" class="active-trail active">Academic Programs</a></li> 
+      <li class=""><a href="http://www.pdx.edu/campus">Campus</a></li>
+      <li class="last"><a href="http://www.pdx.edu/alumni">Alumni</a></li> 
+      </ul>
+      <div id="container">
+       <div id="outer">
 
+        <div id="google_header">
+         <h1>Google Utility</h1>
+         <ul id="navbar">
+         <div id="navbar_posish">
+          <li id="create_edit_calendar_view" class="app_nav_li">
+           <div id="navbar_div_left">
+            Calendar Form
+           </div><!-- navbar_div_left -->  
+          </li>
+          <li id="group_form_view" class="app_nav_li">
+           <div id="navbar_div">
+            Group Form
+           </div><!-- navbar_div -->
+          </li>
+          <li id="instructions_view" class="app_nav_li">
+           <div id="navbar_div">
+            Instructions
+           </div><!-- navbar_div -->
+          </li>
+          <a href="/accounts/logout">
+           <li id="logout_button" class="app_nav_li">
+            <div id="navbar_div">
+             Logout
+            </div><!-- navbar_div -->
+           </li>
+          </a>
+         </ul>
+        </div><!-- google_header -->
 
+        <div id="calendar">
+         <div id="form_div">
+          <form id="calendar_form" action='/cal/' method='post'>
+           {% csrf_token %}
+           {{ calendar_form.non_field_errors }}
+           <label for="calendar_name">Name of Calendar</label>
+           <br/>
+           {{ calendar_form.calendar_name }}
+           <br/>
+           <label for="calendar_requestor_1">Requestor</label>
+           <br/>
+           {{ calendar_form.calendar_requestor_1 }}
+           <br/>
+           <label for="calendar_requestor_2">Second Requestor</label>
+           <br/>
+           {{ calendar_form.calendar_requestor_2 }}
+           <br/><br/>
+           <div id="calendar_submit" class="submit_div">
+            <strong>Submit</strong>
+           </div><!-- calendar_submit -->
+          </form><!-- calendar_form  -->
+         </div><!-- form_div -->
+        </div><!-- calendar -->
 
+        <div id="group">
+         <div id="form_div">
+          <form id="group_form" action='/cal/' method='post'>
+           {% csrf_token %}
+           {{ group_form.non_field_errors }}
+           <label for="group_name">Group Name</label>
+           <br/>
+           {{ group_form.group_name }}
+           <br/>
+           <label for="group_description">Group Description</label>
+           <br/>
+           {{ group_form.group_description }}
+           <br/>
+           <label for="group_requestor_1">Requestor</label>
+           <br/>
+           {{ group_form.group_requestor_1 }}
+           <br/>
+           <label for="group_requestor_2">Secondary Requestor</label>
+           <br/>
+           {{ group_form.group_requestor_2 }}
+           <br/><br/>
+           <div id="group_submit" class="submit_div">
+            <strong>Submit</strong>
+           </div><!-- group_submit -->
+          </form>
+         </div><!-- form_div -->
+        </div><!-- group -->
 
-
-        </div>
-      </div>
-      </div>
-    </div>
-      <div id="footer">
-        <ul>
-		<li class="first copyright"><a href="http://www.pdx.edu/copyright" title="Portland State Copyright Information">© 2011</a></li>
-		<li><a href="http://www.pdx.edu/giving/plans" title="Giving at Portland State">Give to PSU</a></li>
-		<li><a href="http://www.pdx.edu/faqs" title="Frequently-Asked Questions about Portland State">PSU FAQs</a></li>
-		<li><a href="http://www.pdx.edu/contact-us" title="Contact Portland State">Contact PSU</a></li>
-		<li><a href="http://www.directory.pdx.edu/" title="Find People at Portland State">Find People</a></li>
-		<li><a href="http://www.pdx.edu/campus" title="Getting Around at Portland State">Maps/Directions</a></li>
-		<li class="last"><a href="http://www.pdx.edu/sitemap" title="Portland State Sitemap">PSU Sitemap</a></li>
-	</ul>
-     </div>
-    </div>
-  
-</body>
+        <div id="instructions_div">
+         <div id='form_div'>
+          <p>
+           <strong>Calendars</strong><br/>
+           To use this form, enter the name of a calendar. <br/>
+           If it is not an existing calendar, it will be created. <br/>
+           If it is an existing calendar, this will query it. <br/>
+           After being created or queried, the requestors will <br/>
+           be added as owners of the calendar.<br/><br/>
+           <strong>Groups</strong><br/>
+           To use this form, enter the name of a group, with capitalization.<br/>
+           ex: AAA-TripleA-Group, BAC-KToTheFuture-Group <br/>
+           If it is not an existing group, it will be created. <br/>
+           If it is an existing group, this will query it. <br/>
+           After being created or queried, the requestors will <br/>
+           be added as owners of the group.<br/>
+          </p>
+         </div><!-- form_div -->
+        </div><!-- instructions_div -->
+        <div id="success">
+         <div id="form_div">
+         </div><!-- form_div -->
+        </div><!-- success  -->
+        <div id="waiting">
+         <div id="form_div">
+          Waiting for response...
+         </div><!-- form_div -->
+        </div><!-- waiting -->
+       </div><!-- outer -->
+      </div><!-- conainer -->
+     </div><!-- main -->
+    </div><!-- main_wrapper -->
+   </div><!-- page -->
+   <div id="footer">
+    <ul>
+     <li class="first copyright"><a href="http://www.pdx.edu/copyright" title="Portland State Copyright Information">© 2011</a></li>
+     <li><a href="http://www.pdx.edu/giving/plans" title="Giving at Portland State">Give to PSU</a></li>
+     <li><a href="http://www.pdx.edu/faqs" title="Frequently-Asked Questions about Portland State">PSU FAQs</a></li>
+     <li><a href="http://www.pdx.edu/contact-us" title="Contact Portland State">Contact PSU</a></li>
+     <li><a href="http://www.directory.pdx.edu/" title="Find People at Portland State">Find People</a></li>
+     <li><a href="http://www.pdx.edu/campus" title="Getting Around at Portland State">Maps/Directions</a></li>
+     <li class="last"><a href="http://www.pdx.edu/sitemap" title="Portland State Sitemap">PSU Sitemap</a></li>
+    </ul>
+   </div><!-- footer -->
+ </body>
 </html>
