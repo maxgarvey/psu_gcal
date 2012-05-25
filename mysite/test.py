@@ -240,20 +240,26 @@ class group_test:
     def test_process_group_existing(self):
         '''this function tests running the process_group method on a known
         existing group'''
-        response = process_group('group_name', True, False)
-        assert (response == 'group_name (existing group)')
+        response = process_group('group_name', '', True, False)
+	meaningful_response = response.split('\n')[0]
+	print meaningful_response
+        assert (meaningful_response == 'group name: group_name (existing group)')
 
     def test_process_group_new(self):
         '''this function tests running the process_group method on a new
         group'''
-        response = process_group('group_name', False, True)
-        assert (response == 'group_name (new group)')
+        response = process_group('group_name', '', False, True)
+	meaningful_response = response.split('\n')[0]
+	print meaningful_response
+        assert (meaningful_response ==  'group name: group_name (new group)')
 
     def test_process_group_error(self):
         '''this function tests running the process_group method on invalid
         input; indicating failure to create group'''
-        response = process_group('group_name', False, False)
-        assert (response == 'could not make group: group_name')
+        response = process_group('group_name', '', False, False)
+	meaningful_response = response.split('\n')[0]
+	print meaningful_response
+        assert (meaningful_response == 'could not make group: group_name')
 
     def test_group_process_reqiuestor_existing(self):
         '''this function tests the group_process_requestor method on a requestor

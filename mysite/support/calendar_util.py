@@ -7,7 +7,6 @@ def calendar_validate( calendar_name, client ):
     a boo telling whether the cal exists, and a boo if we're successful in
     creating a new cal if it doesn't. Also, the acl is retrieved'''
     #does cal with name == calendar_name already exist?
-    #print 'calendar_name: '+str(calendar_name) + ' client: ' +str(client) #debug
     calendar_already_exists = False
     existing_cals = client.get_all_resources()
     for cal in existing_cals:
@@ -15,17 +14,16 @@ def calendar_validate( calendar_name, client ):
             calendar_already_exists = True
             break
 
-    #print 'debug1'
     #if not existing, create new. successful create?
     success = False
     if not calendar_already_exists:
         try:
             client.create( name=str(calendar_name) )
             success = True
-        except:
-            pass
+        except Exception, err:
+            success = str(err)
+            #pass
 
-    #print 'debug2'
     #get acl
     if calendar_already_exists or success:
         try:

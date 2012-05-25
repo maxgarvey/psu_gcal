@@ -8,7 +8,10 @@ def requestor_validate( requestor, client ):
         user = User( client.domain )
     except:
         return False
-    if user.query_user( requestor )['exists']:
-        return True
-    else:
-        return False
+    try:
+        if user.query_user( requestor )['exists']:
+            return True
+        else:
+            return False
+    except TypeError, err:
+        raise Exception('couldn\'t query user: '+str(requestor))

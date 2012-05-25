@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from my_forms import CalendarForm, GroupForm
 from psugle.calresource import CalendarResource
 from psugle.group import Group
+from psugle.creds import google, group, calendar
 from support.calendar_util import calendar_validate, calendar_already_owner, \
 process_calendar, calendar_process_requestor, calendar_process_form
 from support.general_util import requestor_validate
@@ -46,18 +47,20 @@ def index(request):
                 calendar_name, calendar_requestor_1, calendar_requestor_2 = \
                     calendar_process_form(form)
                 try:
-                    client = CalendarResource( 'gtest.pdx.edu' )
+                    #client = CalendarResource( google.keys()[0] )
+                    client = CalendarResource(domain=calendar.keys()[0],adminuser=calendar[calendar.keys()[0]]['adminuser'],password=calendar[calendar.keys()[0]]['password'])
                     #print str(client) #debug
                     try:
                         calendar_already_exists, success, acl = \
                             calendar_validate( calendar_name, client )
+                        __logger__.info('calendar_already_exists: '+str(calendar_already_exists)+'\nsuccess: '+str(success)+'\nclient: '+str(client)) #debug
                     except Exception, err:
-                        print err
+                        __logger__.info('err: '+str(err)) #debug
 
                     #create success message
                     response = process_calendar( 
                             calendar_name, calendar_already_exists, success )
-
+                    __logger__.info('response: '+response) #debug
                     if calendar_requestor_1:
                         if requestor_validate( calendar_requestor_1, client ):
                             requestor_1_already_owner = calendar_already_owner(
@@ -91,14 +94,15 @@ def index(request):
                                 ' is not a valid user'
 
                     __logger__.info('user: ' + str(request.user) + \
-                        ' has made the following request:\n' + str(response))
+                        ' has made the following request:\n' + str(response) + \
+                        '\n')
                     return HttpResponse( response )
 
                 except Exception, err:
-                    response = err
-                    response += '\n<br/>calendar name: ' + calendar_name
-                    response += '\n<br/>requestor_1: ' + calendar_requestor_1
-                    response += '\n<br/>requestor_2: ' + calendar_requestor_2
+                    response = str(err)
+                    response += '\n<br/>calendar name: ' + str(calendar_name)
+                    response += '\n<br/>requestor_1: ' + str(calendar_requestor_1)
+                    response += '\n<br/>requestor_2: ' + str(calendar_requestor_2)
                     return HttpResponse( response )
 
         #if its the groups form that was submitted
@@ -115,7 +119,8 @@ def index(request):
                 group_requestor_2 = form.cleaned_data['group_requestor_2']
 
                 try:
-                    client = Group( 'gtest.pdx.edu' )
+                    #client = Group( google.keys()[0] )
+                    client = Group(domain=group.keys()[0],adminuser=group[group.keys()[0]]['adminuser'],password=group[group.keys()[0]]['password'])
                     group_already_exists, success = group_validate( 
                     group_name, group_description, client )
 
@@ -125,36 +130,42 @@ def index(request):
                         group_already_exists, success )
 
                     if group_requestor_1:
-                        if requestor_validate( group_requestor_1, client ):
-                            requestor_1_already_owner = group_already_owner(
-                                group_requestor_1, 
-                                acl, 
-                                client )
+                        try:
+                            if requestor_validate( group_requestor_1, client ):
+                                requestor_1_already_owner = group_already_owner(
+                                    group_requestor_1, 
+                                    group_name, 
+                                    client )
 
-                            response += group_process_requestor(
-                                group_requestor_1, 
-                                group_name, 
-                                requestor_1_already_owner, 
-                                client )
-                        else:
-                            response += '\n<br/>' + group_requestor_1 + \
-                                ' is not a valid user'
+                                response += group_process_requestor(
+                                    group_requestor_1, 
+                                    group_name, 
+                                    requestor_1_already_owner, 
+                                    client )
+                            else:
+                                response += '\n<br/>' + group_requestor_1 + \
+                                    ' is not a valid user'
+                        except Exception, err:
+                            response += '\n<br/>' + str(err)
 
                     if group_requestor_2:
-                        if requestor_validate( group_requestor_2, client ):
-                            requestor_2_already_owner = group_already_owner(
-                                group_requestor_2,
-                                acl,
-                                client )
+                        try:
+                            if requestor_validate( group_requestor_2, client ):
+                                requestor_2_already_owner = group_already_owner(
+                                    group_requestor_2,
+                                    group_name,
+                                    client )
 
-                            response += group_process_requestor(
-                                group_requestor_2, 
-                                group_name, 
-                                requestor_2_already_owner, 
-                                client )
-                        else:
-                            response += '\n<br/>' + group_requestor_2 + \
-                                ' is not a valid user'
+                                response += group_process_requestor(
+                                    group_requestor_2, 
+                                    group_name, 
+                                    requestor_2_already_owner, 
+                                    client )
+                            else:
+                                response += '\n<br/>' + group_requestor_2 + \
+                                    ' is not a valid user'
+                        except Exception, err:
+                            response += '\n<br/>' + str(err)
 
                     __logger__.info('user: ' + str(request.user) + \
                         ' has made the following request:\n' \
@@ -163,6 +174,7 @@ def index(request):
 
                 except Exception, err:
                     response = str(err)
+                    response += '\n<br/>There was an error.'
                     response += '\n<br/>group name: '  +             str(group_name)
                     response += '\n<br/>description:'  +      str(group_description)
                     response += '\n<br/>requestor 1: ' +      str(group_requestor_1)
