@@ -1,6 +1,9 @@
 '''/psu_gcal/mysite/psu_gcal/support/group_util.py'''
 
 from psugle.user import User
+from subprocess import call
+import sys
+import os
 
 def group_validate( group_name, group_description, client ):
     '''this function takes a group name and a client object and returns
@@ -20,6 +23,16 @@ def group_validate( group_name, group_description, client ):
             success = True
         except:
             pass
+
+    if success:
+        try:
+            #print 'os.getcwd(): {0}'.format(os.getcwd()) #debug
+            #print 'sys.path: {0}'.format(sys.path) #debug
+            #print 'os.listdir(os.getcwd()): {0}'.format(os.listdir(os.getcwd())) #debugi
+            print '"{0}@pdx.edu".format(group_name): '+"{0}@pdx.edu".format(group_name) #debug
+            call(['/var/www/env/bin/python2.6','/var/www/psu_gcal/gam.py','update','group',"{0}@pdx.edu".format(group_name),'settings','is_archived','True'])
+        except Exception, err:
+            print 'Error: {}'.format(err)
 
     return group_already_exists, success
 
