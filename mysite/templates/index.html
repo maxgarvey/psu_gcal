@@ -20,6 +20,7 @@
    }
    //this block hides the forms initially
    $("#calendar").addClass("inner").hide();
+   $("#alias").slideUp();
    $("#instructions_div").addClass("inner").hide();
    $("#group").addClass("inner").hide();
    $("#success").addClass("inner").hide();
@@ -27,6 +28,7 @@
    //for each button, the other forms will slide up
    //and the relevant one will be displayed
    $("#create_edit_calendar_view").click( function(){
+    $("#alias").slideUp();
     $("#instructions_div").slideUp();
     $("#group").slideUp();
     $("#success").hide();
@@ -38,6 +40,7 @@
    });
    $("#instructions_view").click( function(){
     $("#calendar").slideUp();
+    $("#alias").slideUp();
     $("#group").slideUp();
     $("#success").hide();
     $("#waiting").hide()
@@ -45,6 +48,7 @@
    });
    $("#group_form_view").click( function(){
     $("#calendar").slideUp();
+    $("#alias").slideUp();
     $("#instructions_div").slideUp();
     $("#success").hide();
     $("#waiting").hide()
@@ -52,6 +56,14 @@
     //this line resets the form when the user clicks 
     //on the button for the other form
     resetForm($("#calendar_form"));
+   });
+   $("#create_alias_view").click( function() {
+    $("#calendar").slideUp();
+    $("#group").slideUp();
+    $("#instructions_div").slideUp();
+    $("#success").hide();
+    $("#waiting").hide()
+    $("#alias").slideDown();
    });
    //this block spoofs a form submit for the calendar form
    $("#calendar_submit").click( function() {
@@ -95,8 +107,27 @@
     $("#calendar").slideUp();
     $("#waiting").slideDown();
    });
-  }
-  );
+  //this block spoofs a form submit for the alias form
+  $("#alias_submit").click( function() {
+   $.ajax({
+    url:"/alias/",
+    type:"POST",
+    data:"csrfmiddlewaretoken="+$("input[type=hidden][name=csrfmiddlewaretoken]").attr("value")+
+     "&alias="+$("input[name=alias]").val()+
+     "&uid="+$("input[name=uid]").val(),
+    success:function(a){
+     $("#waiting").slideUp();
+     $("#success").html('<div id="form_div">'+a+' </div>');
+     $('#success').slideDown();
+    }
+   });
+   $("#alias").slideUp();
+   $("#instructions_div").slideUp();
+   $("#group").slideUp();
+   $("#calendar").slideUp();
+   $("#waiting").slideDown();
+  });
+});
   </script>
   <div id="page">
 
@@ -149,6 +180,11 @@
           <li id="instructions_view" class="app_nav_li">
            <div id="navbar_div">
             Instructions
+           </div><!-- navbar_div -->
+          </li>
+          <li id="create_alias_view" class="app_nav_li">
+           <div id="navbar_div">
+            Alias Form
            </div><!-- navbar_div -->
           </li>
           <a href="/accounts/logout">
@@ -213,6 +249,26 @@
          </div><!-- form_div -->
         </div><!-- group -->
 
+        <div id="alias">
+         <div id="form_div">
+          <form id="alias_form" action="/cal/" method="post">
+           {% csrf_token %}
+           {{ alias_form.non_field_errors }}
+           <label for="alias">Alias</label>
+           <br/>
+           {{ alias_form.alias }}
+           <br/>
+           <label for="uid">Username</label>
+           <br/>
+           {{ alias_form.uid }}
+           <br/><br/>
+           <div id="alias_submit" class="submit_div">
+            <strong>Submit</strong>
+           </div><!-- alias_submit -->
+          </form>
+         </div><!-- form_div -->
+        </div><!-- alias -->
+
         <div id="instructions_div">
          <div id='form_div'>
           <p>
@@ -229,6 +285,11 @@
            If it is an existing group, this will query it. <br/>
            After being created or queried, the requestors will <br/>
            be added as owners of the group.<br/>
+           <strong>Alias</strong><br/>
+           To use this form, enter the desired alias<br/>
+           and the username that the alias matches with<br/>
+           If it is not an existing alias, it will be created. <br/>
+           If it is an existing alias, this will tell you. <br/>
           </p>
          </div><!-- form_div -->
         </div><!-- instructions_div -->
