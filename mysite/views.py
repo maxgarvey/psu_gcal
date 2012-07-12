@@ -100,13 +100,13 @@ def index(request):
 
                 except Exception, err:
                     response = str(err)
-                    response += '\n<br/>calendar name: ' + str(calendar_name)
+                    response https://sso.pdx.edu/cas/logout+= '\n<br/>calendar name: ' + str(calendar_name)
                     response += '\n<br/>requestor_1: ' + str(calendar_requestor_1)
                     response += '\n<br/>requestor_2: ' + str(calendar_requestor_2)
                     return HttpResponse( response )
 
         #if its the groups form that was submitted
-        else:
+        elif (u'group_name' in request.POST.keys()):
             form = GroupForm( request.POST )
             #check if form valid
             if not form.is_valid():
@@ -181,3 +181,6 @@ def index(request):
                     response += '\n<br/>requestor 2: ' +      str(group_requestor_2)
 
                     return HttpResponse( response )
+
+    if u'new_alias' in request.POST.keys():
+        create_alias(request.POST[u'alias'], request.POST[u'uid'])
