@@ -14,4 +14,4 @@ def requestor_validate( requestor, client ):
         else:
             return False
     except TypeError, err:
-        raise Exception('couldn\'t query user: '+str(requestor))
+        raise Exception('couldn\'t query username: '+str(requestor)+', please contact requestor or look up user in ldap.')

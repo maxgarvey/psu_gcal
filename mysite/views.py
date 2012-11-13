@@ -1,18 +1,27 @@
 '''psu_gcal/mysite/psu_gcal/views.py'''
 
+import sys
+sys.path.append("/home/maxgarvey/projects/psu_gcal/live_version/mysite")
+
 from django.shortcuts import render_to_response 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, Context, loader
 from django.contrib.auth.decorators import login_required
-from my_forms import CalendarForm, GroupForm
-from psugle.calresource import CalendarResource
-from psugle.group import Group
-from psugle.creds import google, group, calendar
+from my_forms import CalendarForm, GroupForm, AliasForm
+try:
+    from psugle.calresource import CalendarResource
+    from psugle.group import Group
+    from psugle.creds import google, group, calendar
+except:
+    from mysite.psugle.calresource import CalendarResource
+    from mysite.psugle.group import Group
+    from mysite.psugle.creds import google, group, calendar
 from support.calendar_util import calendar_validate, calendar_already_owner, \
 process_calendar, calendar_process_requestor, calendar_process_form
 from support.general_util import requestor_validate
 from support.group_util import group_validate, group_already_owner, \
 process_group, group_process_requestor
+from support.alias_util import create_alias
 
 #for debug
 import logging
@@ -28,12 +37,26 @@ def index(request):
     else:
         #check if form submitted
         if not request.method == 'POST':
-            calendar_form = CalendarForm()
-            group_form = GroupForm()
-            template = loader.get_template( 'index.html' )
-            context = Context()
-            return render_to_response( 'index.html',
-                    { 'calendar_form':calendar_form, 'group_form':group_form },
+            #if the user wants the calendar form
+            if request.path == '/calendar_form/':
+                calendar_form = CalendarForm()
+                template = loader.get_template("calendar_form.html")
+                context = Context()
+                return render_to_response('calendar_form.html', {'calendar_form': calendar_form}, context_instance=RequestContext(request))
+            #if the user wants the group form
+            elif request.path == '/group_form/':
+                group_form = GroupForm()
+                template = loader.get_template("group_form.html")
+                context = Context()
+                return render_to_response('group_form.html', {'group_form': group_form}, context_instance=RequestContext(request))
+            #no more alias form... handled with the other alias create scripts
+            #alias_form = AliasForm()
+
+            #the generic case
+            else:
+                template = loader.get_template( 'index.html' )
+                context = Context()
+                return render_to_response( 'index.html', {},
                     context_instance=RequestContext(request)  )
 
         #if it's the calendar form that they submitted
@@ -46,9 +69,13 @@ def index(request):
             else:
                 calendar_name, calendar_requestor_1, calendar_requestor_2 = \
                     calendar_process_form(form)
+                print 'calendar_name: {0}'.format(calendar_name)#debug
+                print 'calendar_requestor_1: {0}'.format(calendar_requestor_1)#debug
+                print 'calendar_requestor_2: {0}'.format(calendar_requestor_2)#debug
                 try:
                     #client = CalendarResource( google.keys()[0] )
                     client = CalendarResource(domain=calendar.keys()[0],adminuser=calendar[calendar.keys()[0]]['adminuser'],password=calendar[calendar.keys()[0]]['password'])
+                    print 'client: {0}'.format(client)#debug
                     #print str(client) #debug
                     try:
                         calendar_already_exists, success, acl = \
@@ -96,14 +123,21 @@ def index(request):
                     __logger__.info('user: ' + str(request.user) + \
                         ' has made the following request:\n' + str(response) + \
                         '\n')
-                    return HttpResponse( response )
+                    #return HttpResponse( response )
+
+                    template = loader.get_template("success.html")
+                    context = Context()
+                    return render_to_response('success.html', {'success_msg': response}, context_instance=RequestContext(request))
 
                 except Exception, err:
                     response = str(err)
-                    response https://sso.pdx.edu/cas/logout+= '\n<br/>calendar name: ' + str(calendar_name)
+                    response += '\n<br/>calendar name: ' + str(calendar_name)
                     response += '\n<br/>requestor_1: ' + str(calendar_requestor_1)
                     response += '\n<br/>requestor_2: ' + str(calendar_requestor_2)
-                    return HttpResponse( response )
+                    template = loader.get_template("success.html")
+                    context = Context()
+                    return render_to_response('success.html', {'success_msg': response}, context_instance=RequestContext(request))
+                    #return HttpResponse( response )'''
 
         #if its the groups form that was submitted
         elif (u'group_name' in request.POST.keys()):
@@ -170,7 +204,11 @@ def index(request):
                     __logger__.info('user: ' + str(request.user) + \
                         ' has made the following request:\n' \
                         + str(response) + '\n')
-                    return HttpResponse( response )
+
+                    template = loader.get_template("success.html")
+                    context = Context()
+                    return render_to_response('success.html', {'success_msg': response}, context_instance=RequestContext(request))
+                    #return HttpResponse( response )
 
                 except Exception, err:
                     response = str(err)
@@ -179,8 +217,6 @@ def index(request):
                     response += '\n<br/>description:'  +      str(group_description)
                     response += '\n<br/>requestor 1: ' +      str(group_requestor_1)
                     response += '\n<br/>requestor 2: ' +      str(group_requestor_2)
-
-                    return HttpResponse( response )
-
-    if u'new_alias' in request.POST.keys():
-        create_alias(request.POST[u'alias'], request.POST[u'uid'])
+                    template = loader.get_template("success.html")
+                    context = Context()
+                    return render_to_response('success.html', {'success_msg': response}, context_instance=RequestContext(request))

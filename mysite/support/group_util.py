@@ -4,6 +4,7 @@ from psugle.user import User
 from subprocess import call
 import sys
 import os
+import oauth_to_gdata
 
 def group_validate( group_name, group_description, client ):
     '''this function takes a group name and a client object and returns
@@ -29,7 +30,11 @@ def group_validate( group_name, group_description, client ):
             #print 'os.getcwd(): {0}'.format(os.getcwd()) #debug
             #print 'sys.path: {0}'.format(sys.path) #debug
             #print 'os.listdir(os.getcwd()): {0}'.format(os.listdir(os.getcwd())) #debugi
-            print '"{0}@pdx.edu".format(group_name): '+"{0}@pdx.edu".format(group_name) #debug
+            #print '"{0}@pdx.edu".format(group_name): '+"{0}@pdx.edu".format(group_name) #debug
+            #print 'group_name+"@"+client.domain: {}'.format(str(group_name+'@'+client.domain)) #debug
+            #print group_name+'@'+client.domain
+            group_email = group_name+'@'+client.domain
+            #oauth_to_gdata.set_archived_status(group_email)
             call(['/var/www/env/bin/python2.6','/var/www/psu_gcal/gam.py','update','group',"{0}@pdx.edu".format(group_name),'settings','is_archived','True'])
         except Exception, err:
             print 'Error: {}'.format(err)

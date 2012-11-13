@@ -79,7 +79,36 @@
            </li>
           </a>
          </ul> -->
-        </div><!-- google_header -->
+
+        <div id="group">
+         <div id="form_div">
+          <form id="group_form" action='/group/' method='post'>
+           {% csrf_token %}
+           {{ group_form.non_field_errors }}
+           <label for="group_name">Group Name</label>
+           <br/>
+           {{ group_form.group_name }}
+           <br/>
+           <label for="group_description">Group Description</label>
+           <br/>
+           {{ group_form.group_description }}
+           <br/>
+           <label for="group_requestor_1">Requestor</label>
+           <br/>
+           {{ group_form.group_requestor_1 }}
+           <br/>
+           <label for="group_requestor_2">Secondary Requestor</label>
+           <br/>
+           {{ group_form.group_requestor_2 }}
+           <br/><br/>
+           <input type="submit" id="query_submit" value="submit" class="submit_button">
+           <!-- <div id="group_submit" class="submit_div"> -->
+           <!--  <strong>Submit</strong> -->
+           <!-- </div> group_submit -->
+          </form>
+         </div><!-- form_div -->
+        </div><!-- group -->
+        </div>
 
        </div><!-- outer -->
       </div><!-- conainer -->

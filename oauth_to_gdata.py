@@ -8,7 +8,7 @@ import gdata.apps.groupsettings
 import gdata.apps.groupsettings.service
 
 #a hard coded version in case we get errors
-__this_dir__ = '/home/maxgarvey/utilities'
+__this_dir__ = '/var/www/psu_gcal'
 
 def try_oauth(gdata_object):
     '''try oauth attempts to find the oauth file and verify that it's good
@@ -20,6 +20,8 @@ def try_oauth(gdata_object):
         pass
     if os.path.isfile(get_path() + oauth_filename):
         oauthfile = open(get_path() + oauth_filename, 'rb')
+        print oauthfile.read() #debug
+        oauthfile.seek(0) #debug
         domain = oauthfile.readline()[0:-1]
         try:
             token = pickle.load(oauthfile)
@@ -53,40 +55,45 @@ def get_path():
     else:
         divider = '/'
     try:
-        return os.getcwd()+divider
+        print 'path to look for oauth: {0}'.format(os.getcwd()+divider)
+        #return os.getcwd()+divider
+        return __this_dir__+divider
     except:
-        print os.path.dirname(os.path.realpath(__this_dir__))+divider #debug
+        print 'path to look for oauth: {0}'.format(os.getcwd()+divider)
+        #print os.path.dirname(os.path.realpath(__this_dir__))+divider #debug
         return os.path.dirname(os.path.realpath(__this_dir__))+divider
 
 def group_settings_object():
     groupsettings = gdata.apps.groupsettings.service.GroupSettingsService()
     if not try_oauth(groupsettings):
-        doRequestoauth()
+        #doRequestoauth()
         try_oauth(groupsettings)
     #groupsettings = commonAppsObjInit(groupsettings)
     return groupsettings
 
 def set_archived_status(group_email):
-    print 'group_email: {}'.format(group_email)
-    print 'get_path(): {}'.format(get_path())
+    print 'group_email: {0}'.format(group_email)
+    print 'get_path(): {0}'.format(get_path())
     gdata_object = group_settings_object()
     xml =  '''<?xml version="1.0" encoding="UTF-8"?>
-<entry xmlns="http://www.w3.org/2005/Atom" xmlns:apps="http://schemas.google.com/apps/2006" xmlns:gd="http://schemas.google.com/g/2005">
-  <id>tag:googleapis.com,2010:apps:groupssettings:GROUP:NNN</id>
-  <title>Groups Resource Entry</title>
-  <author>
+    <entry xmlns="http://www.w3.org/2005/Atom" xmlns:apps="http://schemas.google.com/apps/2006" xmlns:gd="http://schemas.google.com/g/2005">
+    <id>tag:googleapis.com,2010:apps:groupssettings:GROUP:NNN</id>
+    <title>Groups Resource Entry</title>
+    <author>
     <name>Google</name>
-  </author>
-  <apps:id>%s</apps:id>
-  <apps:email>%s</apps:email>
-''' % (group_email, group_email)
+    </author>
+    <apps:id>%s</apps:id>
+    <apps:email>%s</apps:email>
+    ''' % (group_email, group_email)
     xml += '<apps:isArchived>true</apps:isArchived></entry>'    
-    uri = '/groups/v1/groups/{}?alt=atom'.format(group_email)
+    print 'xml: {0}'.format(xml) #debug
+    uri = '/groups/v1/groups/{0}?alt=atom'.format(group_email)
+    print 'uri: {0}'.format(uri) #debug
     try:
         gdata_object.Put(uri=uri,data=xml)
         print 'change went through.'
     except Exception, err:
-        print 'setting archived bit failed: {}'.format(err)
+        print 'setting archived bit failed: {0}'.format(err)
 
 if __name__ == "__main__":
     print 'sys.argv: ' + str(sys.argv) #debug
@@ -126,5 +133,5 @@ if __name__ == "__main__":
 
         print 'change went through' #debug
     except Exception, err:
-        print 'error setting archived bit: {}'.format(err)
+        print 'error setting archived bit: {0}'.format(err)
         #pass

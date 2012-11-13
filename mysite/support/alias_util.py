@@ -6,7 +6,7 @@ from tempfile import TemporaryFile
 
 def create_alias(alias, uid):
     '''this method will create the alias in google's system via gam'''
-    user_client = User()
+    user_client = User('pdx.edu','ops-cal','Utdedd7twod%')#User('pdx.edu','ops-cal','Utdedd7twod%')
     uid_exists = user_client.query_user(uid)
     if False in uid_exists.values():
         #if the uid doesn't exist or is disnabled, then we can't use it.
